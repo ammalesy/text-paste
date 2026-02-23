@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+    <!-- Outgoing network connections (URLSession to TextPaste server) -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+
+    <!-- Keychain access for storing auth token -->
+    <key>keychain-access-groups</key>
+    <array>
+        <string>$(AppIdentifierPrefix)com.textpaste.mac</string>
+    </array>
+
+    <!-- User notifications (feedback after save) -->
+    <key>com.apple.security.app-sandbox</key>
+    <false/>
+
+</dict>
+</plist>

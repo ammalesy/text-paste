@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+    <!-- ── App identity ── -->
+    <key>CFBundleName</key>
+    <string>TextPaste</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>TextPaste</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>com.textpaste.mac</string>
+
+    <key>CFBundleVersion</key>
+    <string>1</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+
+    <key>CFBundleExecutable</key>
+    <string>TextPasteMac</string>
+
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+
+    <!-- ── Hide from Dock & App Switcher (menu-bar only app) ── -->
+    <key>LSUIElement</key>
+    <true/>
+
+    <!-- ── Minimum macOS version ── -->
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+
+    <!-- ── Principal class ── -->
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+
+    <!-- ────────────────────────────────────────────
+         NSServices — กำหนด "Copy to TextPaste" ใน
+         Services menu (คลิกขวา / Cmd-Shift-8)
+         ──────────────────────────────────────────── -->
+    <key>NSServices</key>
+    <array>
+        <dict>
+            <!-- ชื่อที่ปรากฏใน Services sub-menu -->
+            <key>NSMenuItem</key>
+            <dict>
+                <key>default</key>
+                <string>Copy to TextPaste</string>
+            </dict>
+
+            <!-- ชื่อ method ใน ServiceHandler (ไม่ใส่ full selector) -->
+            <key>NSMessage</key>
+            <string>performPaste</string>
+
+            <!-- ประเภทข้อมูลที่รับ (plain text) -->
+            <key>NSSendTypes</key>
+            <array>
+                <string>NSStringPboardType</string>
+                <string>public.utf8-plain-text</string>
+            </array>
+
+            <!-- keyboard shortcut (optional) -->
+            <key>NSKeyEquivalent</key>
+            <dict>
+                <key>default</key>
+                <string></string>
+            </dict>
+        </dict>
+    </array>
+
+    <!-- ── Outgoing network (needed for URLSession) ── -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <false/>
+    </dict>
+
+</dict>
+</plist>
