@@ -528,12 +528,13 @@ struct RecordsListView: View {
         // dateStr = "2026-02-23"
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        formatter.locale = Locale(identifier: "th_TH")
+        formatter.locale = Locale(identifier: "en_US_POSIX") // parse as Gregorian
         guard let date = formatter.date(from: dateStr) else { return dateStr }
 
         let display = DateFormatter()
         display.dateStyle = .full
         display.locale = Locale(identifier: "th_TH")
+        display.calendar = Calendar(identifier: .buddhist) // พ.ศ. = ค.ศ. + 543
         return display.string(from: date)
     }
 }
