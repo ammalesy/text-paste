@@ -15,6 +15,7 @@
 		B006 /* ServiceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F006 /* ServiceHandler.swift */; };
 		B007 /* LoginWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F007 /* LoginWindowController.swift */; };
 		B008 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F008 /* StatusBarController.swift */; };
+		B009 /* ServiceEnabler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F011 /* ServiceEnabler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		F008 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		F009 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F010 /* TextPasteMac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TextPasteMac.entitlements; sourceTree = "<group>"; };
+		F011 /* ServiceEnabler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEnabler.swift; sourceTree = "<group>"; };
 		PROD /* TextPasteMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextPasteMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -61,6 +63,7 @@
 				F006 /* ServiceHandler.swift */,
 				F007 /* LoginWindowController.swift */,
 				F008 /* StatusBarController.swift */,
+				F011 /* ServiceEnabler.swift */,
 				F009 /* Info.plist */,
 				F010 /* TextPasteMac.entitlements */,
 			);
@@ -151,6 +154,7 @@
 				B006 /* ServiceHandler.swift in Sources */,
 				B007 /* LoginWindowController.swift in Sources */,
 				B008 /* StatusBarController.swift in Sources */,
+				B009 /* ServiceEnabler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

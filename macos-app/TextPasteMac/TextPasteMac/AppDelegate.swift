@@ -30,6 +30,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // Build the menu-bar icon
         statusBarCtrl.setup()
 
+        // Auto-enable "Copy to TextPaste" in System Settings → Keyboard → Services
+        ServiceEnabler.enable()
+
         // Request notification permission (for save feedback)
         UNUserNotificationCenter.current()
             .requestAuthorization(options: [.alert, .sound]) { _, _ in }

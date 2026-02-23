@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>TextPaste</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>x86_64</string>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>1</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>48CC78A203DD996B1842036CCC649A0D7B736407</string>
+				<key>dateExpires</key>
+				<string>2/2/2570 BE</string>
+				<key>type</key>
+				<string>Cloud Managed Developer ID Application</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>com.apple.application-identifier</key>
+				<string>P7J7XPF2TM.com.textpaste.mac</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>P7J7XPF2TM</string>
+				<key>com.apple.security.app-sandbox</key>
+				<false/>
+				<key>com.apple.security.network.client</key>
+				<true/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>P7J7XPF2TM.com.textpaste.mac</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>TextPasteMac.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>c4074382-2db9-4c40-8b48-98bdf1ecf45b</string>
+				<key>dateExpires</key>
+				<string>19/2/2587 BE</string>
+				<key>name</key>
+				<string>Mac Team Direct Provisioning Profile: com.textpaste.mac</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>P7J7XPF2TM</string>
+				<key>name</key>
+				<string>KASIKORN SOFT COMPANY LIMITED</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>1.0</string>
+		</dict>
+	</array>
+</dict>
+</plist>
