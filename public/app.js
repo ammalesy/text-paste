@@ -1,3 +1,75 @@
+/* ── Auth ─────────────────────────────────────── */
+const TOKEN_KEY = 'tp_token';
+
+function getToken() {
+  return sessionStorage.getItem(TOKEN_KEY) || '';
+}
+
+function authHeaders() {
+  return { 'Content-Type': 'application/json', 'x-auth-token': getToken() };
+}
+
+async function doLogin(e) {
+  e.preventDefault();
+  const password = document.getElementById('passwordInput').value;
+  const btn      = document.getElementById('loginBtn');
+  const label    = document.getElementById('loginBtnLabel');
+  const errEl    = document.getElementById('loginError');
+
+  btn.disabled   = true;
+  label.textContent = '⏳ กำลังตรวจสอบ…';
+  errEl.className = 'login-error hidden';
+
+  try {
+    const res  = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+    const data = await res.json();
+
+    if (res.ok && data.token) {
+      sessionStorage.setItem(TOKEN_KEY, data.token);
+      showApp();
+    } else {
+      errEl.textContent = data.error || 'รหัสผ่านไม่ถูกต้อง';
+      errEl.className = 'login-error';
+      document.getElementById('passwordInput').value = '';
+      document.getElementById('passwordInput').focus();
+    }
+  } catch {
+    errEl.textContent = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้';
+    errEl.className = 'login-error';
+  } finally {
+    btn.disabled = false;
+    label.textContent = 'เข้าสู่ระบบ';
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem(TOKEN_KEY);
+  document.getElementById('appScreen').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('passwordInput').value = '';
+}
+
+function showApp() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.remove('hidden');
+}
+
+// On page load — verify existing token
+(async function init() {
+  const token = getToken();
+  if (!token) return;
+  try {
+    const res  = await fetch(`/api/login?token=${encodeURIComponent(token)}`);
+    const data = await res.json();
+    if (data.valid) showApp();
+    else sessionStorage.removeItem(TOKEN_KEY);
+  } catch { /* stay on login */ }
+})();
+
 /* ── Page switching ───────────────────────────── */
 function showPage(page) {
   document.getElementById('page-paste').classList.toggle('active', page === 'paste');
@@ -33,7 +105,7 @@ async function saveText() {
   try {
     const res  = await fetch('/api/save', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify({ text }),
     });
     const data = await res.json();
@@ -72,7 +144,9 @@ async function loadRecords(page = 1) {
   list.innerHTML = '<p class="loading">กำลังโหลด…</p>';
 
   try {
-    const res  = await fetch(`/api/records?page=${page}`);
+    const res  = await fetch(`/api/records?page=${page}`, {
+      headers: authHeaders(),
+    });
     const data = await res.json(); // { grouped: {...}, pagination: {...} }
 
     const { grouped, pagination } = data;
@@ -181,6 +255,7 @@ async function copyAndDelete(text, filename, itemEl) {
   try {
     const res = await fetch(`/api/delete?filename=${encodeURIComponent(filename)}`, {
       method: 'DELETE',
+      headers: authHeaders(),
     });
     if (!res.ok) {
       const data = await res.json();

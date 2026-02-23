@@ -1,4 +1,5 @@
 const { put, list, del } = require('@vercel/blob');
+const { verifyToken } = require('./login');
 
 // Helper: timestamp string e.g. 2026-02-23T14-05-30
 function timestampStr() {
@@ -47,6 +48,12 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Auth check
+  const token = req.headers['x-auth-token'] || '';
+  if (!verifyToken(token)) {
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   let body;

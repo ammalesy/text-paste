@@ -1,4 +1,5 @@
 const { list, del } = require('@vercel/blob');
+const { verifyToken } = require('./login');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,6 +9,12 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'DELETE') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Auth check
+  const token = req.headers['x-auth-token'] || '';
+  if (!verifyToken(token)) {
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
   if (!process.env.BLOB_READ_WRITE_TOKEN) {

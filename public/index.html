@@ -7,37 +7,63 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <header>
+
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
       <h1>📋 TextPaste</h1>
-      <nav>
-        <button class="nav-btn active" id="btn-paste" onclick="showPage('paste')">วางข้อความ</button>
-        <button class="nav-btn" id="btn-records" onclick="showPage('records')">ดูข้อความทั้งหมด</button>
-      </nav>
-    </header>
+      <p class="login-sub">กรุณาใส่รหัสผ่านเพื่อเข้าใช้งาน</p>
+      <form id="loginForm" onsubmit="doLogin(event)">
+        <input
+          id="passwordInput"
+          type="password"
+          class="password-input"
+          placeholder="รหัสผ่าน"
+          autocomplete="current-password"
+          autofocus
+        />
+        <div id="loginError" class="login-error hidden"></div>
+        <button type="submit" id="loginBtn" class="login-btn">
+          <span id="loginBtnLabel">เข้าสู่ระบบ</span>
+        </button>
+      </form>
+    </div>
+  </div>
 
-    <!-- PASTE PAGE -->
-    <section id="page-paste" class="page active">
-      <div class="paste-card">
-        <label for="textInput" class="label">วางข้อความที่ต้องการบันทึก</label>
-        <textarea id="textInput" placeholder="วางข้อความที่นี่…"></textarea>
-        <div class="paste-footer">
-          <span id="charCount">0 ตัวอักษร</span>
-          <button id="saveBtn" onclick="saveText()">
-            <span id="saveBtnLabel">💾 บันทึก</span>
-          </button>
+  <!-- MAIN APP (hidden until logged in) -->
+  <div id="appScreen" class="hidden">
+    <div class="container">
+      <header>
+        <h1>📋 TextPaste</h1>
+        <nav>
+          <button class="nav-btn active" id="btn-paste" onclick="showPage('paste')">วางข้อความ</button>
+          <button class="nav-btn" id="btn-records" onclick="showPage('records')">ดูข้อความทั้งหมด</button>
+          <button class="nav-btn logout-btn" onclick="doLogout()">ออกจากระบบ</button>
+        </nav>
+      </header>
+
+      <!-- PASTE PAGE -->
+      <section id="page-paste" class="page active">
+        <div class="paste-card">
+          <label for="textInput" class="label">วางข้อความที่ต้องการบันทึก</label>
+          <textarea id="textInput" placeholder="วางข้อความที่นี่…"></textarea>
+          <div class="paste-footer">
+            <span id="charCount">0 ตัวอักษร</span>
+            <button id="saveBtn" onclick="saveText()">
+              <span id="saveBtnLabel">💾 บันทึก</span>
+            </button>
+          </div>
         </div>
-      </div>
-      <div id="toast" class="toast hidden"></div>
-    </section>
+        <div id="toast" class="toast hidden"></div>
+      </section>
 
-    <!-- RECORDS PAGE -->
-    <section id="page-records" class="page">
-      <div id="recordsList" class="records-list">
-        <p class="loading">กำลังโหลด…</p>
-      </div>
-    </section>
-
+      <!-- RECORDS PAGE -->
+      <section id="page-records" class="page">
+        <div id="recordsList" class="records-list">
+          <p class="loading">กำลังโหลด…</p>
+        </div>
+      </section>
+    </div>
   </div>
 
   <script src="app.js"></script>
