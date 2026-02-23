@@ -5,7 +5,7 @@ function showPage(page) {
   document.getElementById('btn-paste').classList.toggle('active', page === 'paste');
   document.getElementById('btn-records').classList.toggle('active', page === 'records');
 
-  if (page === 'records') loadRecords();
+  if (page === 'records') loadRecords(1);
 }
 
 /* ── Character counter ────────────────────────── */
@@ -64,21 +64,28 @@ function showToast(msg, type) {
 }
 
 /* ── Load records ─────────────────────────────── */
-async function loadRecords() {
+let currentPage = 1;
+
+async function loadRecords(page = 1) {
+  currentPage = page;
   const list = document.getElementById('recordsList');
   list.innerHTML = '<p class="loading">กำลังโหลด…</p>';
 
   try {
-    const res  = await fetch('/api/records');
-    const data = await res.json(); // { "2026-02-23": [{ filename, content }, ...], ... }
+    const res  = await fetch(`/api/records?page=${page}`);
+    const data = await res.json(); // { grouped: {...}, pagination: {...} }
 
-    const dates = Object.keys(data);
+    const { grouped, pagination } = data;
+    const dates = Object.keys(grouped || {});
+
     if (dates.length === 0) {
       list.innerHTML = '<p class="empty">ยังไม่มีบันทึก</p>';
       return;
     }
 
     list.innerHTML = '';
+
+    // Record groups
     dates.forEach((date) => {
       const group = document.createElement('div');
       group.className = 'day-group';
@@ -88,8 +95,7 @@ async function loadRecords() {
       header.textContent = formatDate(date);
       group.appendChild(header);
 
-      data[date].forEach((entry) => {
-        // entry is { filename, content }
+      grouped[date].forEach((entry) => {
         const item = document.createElement('div');
         item.className = 'record-item';
 
@@ -122,6 +128,34 @@ async function loadRecords() {
 
       list.appendChild(group);
     });
+
+    // Pagination controls
+    if (pagination && pagination.totalPages > 1) {
+      const pager = document.createElement('div');
+      pager.className = 'pagination';
+
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'page-btn';
+      prevBtn.textContent = '← ก่อนหน้า';
+      prevBtn.disabled = pagination.page <= 1;
+      prevBtn.onclick = () => loadRecords(pagination.page - 1);
+
+      const info = document.createElement('span');
+      info.className = 'page-info';
+      info.textContent = `หน้า ${pagination.page} / ${pagination.totalPages}`;
+
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'page-btn';
+      nextBtn.textContent = 'ถัดไป →';
+      nextBtn.disabled = pagination.page >= pagination.totalPages;
+      nextBtn.onclick = () => loadRecords(pagination.page + 1);
+
+      pager.appendChild(prevBtn);
+      pager.appendChild(info);
+      pager.appendChild(nextBtn);
+      list.appendChild(pager);
+    }
+
   } catch (err) {
     list.innerHTML = '<p class="empty">ไม่สามารถโหลดข้อมูลได้</p>';
   }
