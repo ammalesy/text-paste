@@ -20,12 +20,26 @@ module.exports = async function handler(req, res) {
     // Sort newest first
     blobs.sort((a, b) => b.pathname.localeCompare(a.pathname));
 
+    // Fetch content of all blobs in parallel
+    const withContent = await Promise.all(
+      blobs.map(async (b) => {
+        const name = b.pathname.replace('records/', '');
+        try {
+          const r = await fetch(b.url);
+          const content = r.ok ? await r.text() : '';
+          return { filename: name, content };
+        } catch {
+          return { filename: name, content: '' };
+        }
+      })
+    );
+
+    // Group by date
     const grouped = {};
-    blobs.forEach((b) => {
-      const name = b.pathname.replace('records/', '');
-      const dateKey = name.slice(0, 10); // YYYY-MM-DD
+    withContent.forEach(({ filename, content }) => {
+      const dateKey = filename.slice(0, 10); // YYYY-MM-DD
       if (!grouped[dateKey]) grouped[dateKey] = [];
-      grouped[dateKey].push({ filename: name, url: b.url });
+      grouped[dateKey].push({ filename, content });
     });
 
     return res.status(200).json(grouped);

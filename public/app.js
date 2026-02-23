@@ -70,7 +70,7 @@ async function loadRecords() {
 
   try {
     const res  = await fetch('/api/records');
-    const data = await res.json(); // { "2026-02-23": ["2026-02-23T14-05-30-record.txt", ...], ... }
+    const data = await res.json(); // { "2026-02-23": [{ filename, content }, ...], ... }
 
     const dates = Object.keys(data);
     if (dates.length === 0) {
@@ -89,26 +89,34 @@ async function loadRecords() {
       group.appendChild(header);
 
       data[date].forEach((entry) => {
-        // entry is { filename, url }
+        // entry is { filename, content }
         const item = document.createElement('div');
         item.className = 'record-item';
-        item.onclick = () => openRecord(entry.filename, entry.url);
+
+        const left = document.createElement('div');
+        left.className = 'record-left';
 
         const time = document.createElement('span');
         time.className = 'record-time';
         time.textContent = formatTime(entry.filename);
 
-        const name = document.createElement('span');
-        name.className = 'record-name';
-        name.textContent = entry.filename;
+        const preview = document.createElement('span');
+        preview.className = 'record-preview';
+        preview.textContent = entry.content;
 
-        const arrow = document.createElement('span');
-        arrow.className = 'record-arrow';
-        arrow.textContent = '›';
+        left.appendChild(time);
+        left.appendChild(preview);
 
-        item.appendChild(time);
-        item.appendChild(name);
-        item.appendChild(arrow);
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = 'คัดลอก';
+        copyBtn.onclick = (e) => {
+          e.stopPropagation();
+          copyText(entry.content, copyBtn);
+        };
+
+        item.appendChild(left);
+        item.appendChild(copyBtn);
         group.appendChild(item);
       });
 
@@ -119,32 +127,21 @@ async function loadRecords() {
   }
 }
 
-/* ── Open a single record ─────────────────────── */
-async function openRecord(filename, blobUrl) {
-  const modal   = document.getElementById('modal');
-  const title   = document.getElementById('modalTitle');
-  const content = document.getElementById('modalContent');
-
-  title.textContent   = filename;
-  content.textContent = 'กำลังโหลด…';
-  modal.classList.remove('hidden');
-
+/* ── Copy text ────────────────────────────────── */
+async function copyText(text, btn) {
   try {
-    const res  = await fetch(blobUrl);
-    content.textContent = res.ok ? await res.text() : 'ไม่สามารถโหลดข้อมูลได้';
+    await navigator.clipboard.writeText(text);
+    const orig = btn.textContent;
+    btn.textContent = '✅ คัดลอกแล้ว';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.classList.remove('copied');
+    }, 2000);
   } catch {
-    content.textContent = 'ไม่สามารถโหลดข้อมูลได้';
+    showToast('ไม่สามารถคัดลอกได้', 'error');
   }
 }
-
-function closeModal() {
-  document.getElementById('modal').classList.add('hidden');
-}
-
-// Close modal on backdrop click
-document.getElementById('modal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('modal')) closeModal();
-});
 
 /* ── Helpers ──────────────────────────────────── */
 function formatDate(dateStr) {

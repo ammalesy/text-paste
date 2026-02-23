@@ -145,70 +145,54 @@ textarea:focus { border-color: #4f46e5; background: #fff; }
 
 .record-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 12px 20px;
+  gap: 12px;
+  padding: 14px 20px;
   border-bottom: 1px solid #f3f4f6;
-  cursor: pointer;
-  transition: background 0.15s;
 }
 .record-item:last-child { border-bottom: none; }
-.record-item:hover { background: #f5f3ff; }
 
-.record-time { font-size: 0.88rem; color: #6b7280; font-family: monospace; }
-.record-name { font-size: 0.9rem; color: #374151; font-weight: 500; }
-.record-arrow { color: #a5b4fc; font-size: 1rem; }
+.record-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.record-time {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  font-family: monospace;
+  flex-shrink: 0;
+}
+
+.record-preview {
+  font-size: 0.92rem;
+  color: #1f2937;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.copy-btn {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  background: #f0f0ff;
+  color: #4f46e5;
+  border: 1.5px solid #c7d2fe;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+.copy-btn:hover { background: #e0e7ff; border-color: #818cf8; }
+.copy-btn.copied { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
 
 .loading { color: #9ca3af; padding: 12px 0; text-align: center; }
 .empty   { color: #9ca3af; text-align: center; padding: 32px 0; font-size: 0.95rem; }
-
-/* ── Modal ────────────────────────────────────── */
-.modal {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex; align-items: center; justify-content: center;
-  padding: 16px;
-  z-index: 100;
-}
-.modal.hidden { display: none; }
-
-.modal-box {
-  background: #fff;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 680px;
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  overflow: hidden;
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.modal-title { font-weight: 700; font-size: 0.9rem; color: #4f46e5; font-family: monospace; }
-
-.close-btn {
-  background: none; border: none;
-  font-size: 1.1rem; cursor: pointer; color: #6b7280;
-  line-height: 1;
-}
-.close-btn:hover { color: #1f2937; }
-
-.modal-content {
-  padding: 20px;
-  overflow-y: auto;
-  white-space: pre-wrap;
-  word-break: break-word;
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: #1f2937;
-  background: #fafafa;
-  flex: 1;
-}
