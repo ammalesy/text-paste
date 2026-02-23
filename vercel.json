@@ -1,6 +1,3 @@
 {
-  "rewrites": [
-    { "source": "/api/save",    "destination": "/api/save.js" },
-    { "source": "/api/records", "destination": "/api/records.js" }
-  ]
+  "outputDirectory": "public"
 }
