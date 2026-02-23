@@ -118,7 +118,7 @@ async function loadRecords(page = 1) {
         copyBtn.textContent = 'คัดลอก';
         copyBtn.onclick = (e) => {
           e.stopPropagation();
-          copyText(entry.content, copyBtn);
+          copyAndDelete(entry.content, entry.filename, item);
         };
 
         item.appendChild(left);
@@ -161,20 +161,54 @@ async function loadRecords(page = 1) {
   }
 }
 
-/* ── Copy text ────────────────────────────────── */
-async function copyText(text, btn) {
+/* ── Copy then delete ─────────────────────────── */
+async function copyAndDelete(text, filename, itemEl) {
+  // 1. Copy to clipboard
   try {
     await navigator.clipboard.writeText(text);
-    const orig = btn.textContent;
-    btn.textContent = '✅ คัดลอกแล้ว';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = orig;
-      btn.classList.remove('copied');
-    }, 2000);
   } catch {
     showToast('ไม่สามารถคัดลอกได้', 'error');
+    return;
   }
+
+  // 2. Visual feedback on the row
+  itemEl.classList.add('deleting');
+  const btn = itemEl.querySelector('.copy-btn');
+  btn.textContent = '✅ คัดลอกแล้ว';
+  btn.disabled = true;
+
+  // 3. Delete from server
+  try {
+    const res = await fetch(`/api/delete?filename=${encodeURIComponent(filename)}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error || 'Delete failed');
+    }
+  } catch (err) {
+    showToast(`❌ ลบไม่สำเร็จ: ${err.message}`, 'error');
+    itemEl.classList.remove('deleting');
+    btn.textContent = 'คัดลอก';
+    btn.disabled = false;
+    return;
+  }
+
+  // 4. Fade out the row
+  itemEl.classList.add('removed');
+  itemEl.addEventListener('transitionend', () => {
+    const group = itemEl.closest('.day-group');
+    itemEl.remove();
+    // Remove the day group if no more items
+    if (group && group.querySelectorAll('.record-item').length === 0) {
+      group.remove();
+    }
+    // Show empty state if nothing left
+    const list = document.getElementById('recordsList');
+    if (!list.querySelector('.record-item')) {
+      list.innerHTML = '<p class="empty">ยังไม่มีบันทึก</p>';
+    }
+  }, { once: true });
 }
 
 /* ── Helpers ──────────────────────────────────── */
