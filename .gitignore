@@ -1,0 +1,4 @@
+node_modules/
+records/*.txt
+.env
+.env.local
