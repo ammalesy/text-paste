@@ -61,14 +61,22 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Text is empty' });
   }
 
-  const filename = `${timestampStr()}-record.txt`;
-  const blob = await put(`records/${filename}`, text, {
-    access: 'public',
-    contentType: 'text/plain; charset=utf-8',
-  });
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return res.status(500).json({ error: 'BLOB_READ_WRITE_TOKEN is not set. Please connect a Vercel Blob store to this project.' });
+  }
 
-  await cleanOldRecords();
-
-  res.status(200).json({ success: true, filename, url: blob.url });
+  let blob;
+  try {
+    const filename = `${timestampStr()}-record.txt`;
+    blob = await put(`records/${filename}`, text, {
+      access: 'public',
+      contentType: 'text/plain; charset=utf-8',
+    });
+    cleanOldRecords().catch((e) => console.error('cleanOldRecords error:', e));
+    return res.status(200).json({ success: true, filename, url: blob.url });
+  } catch (err) {
+    console.error('Blob put error:', err);
+    return res.status(500).json({ error: err.message || 'Failed to save record' });
+  }
 };
 
